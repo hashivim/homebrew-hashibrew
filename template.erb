@@ -1,0 +1,15 @@
+require 'formula'
+
+class <%= @name.gsub(/\w+/, &:capitalize) %> < Formula
+  homepage 'http://www.<%= @domain %>'
+  version '<%= @version %>'
+
+  url 'https://releases.hashicorp.com/<%= @name %>/<%= @version %>/<%= @name %>_<%= @version %>_darwin_amd64.zip'
+  sha256 '<%= @sha256sum %>'
+
+  depends_on :arch => :x86_64
+
+  def install
+    bin.install Dir['*']
+  end
+end
