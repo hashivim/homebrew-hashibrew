@@ -1,7 +1,7 @@
 require 'formula'
 
-class <%= @name.gsub(/\w+/, &:capitalize) %> < Formula
-  homepage 'http://www.<%= @domain %>'
+class <%= @name.underscore.classify %> < Formula
+  homepage '<%= @homepage %>'
   version '<%= @version %>'
 
   url 'https://releases.hashicorp.com/<%= @name %>/<%= @version %>/<%= @name %>_<%= @version %>_darwin_amd64.zip'

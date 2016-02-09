@@ -1,12 +1,13 @@
+require 'active_support/inflector'
 require 'erb'
 require 'open-uri'
 require 'nokogiri'
 
-def formula(name, domain)
+def formula(name, homepage)
   puts "Generating #{name}.rb"
 
   @name = name
-  @domain = domain
+  @homepage = homepage
 
   index = Nokogiri::HTML(open("https://releases.hashicorp.com/#{name}/"))
   slug = index.xpath('//html/body/ul/li')[1].children[1].attributes['href'].to_s
@@ -23,31 +24,44 @@ def formula(name, domain)
 end
 
 task :consul do
-  formula('consul', 'consul.io')
+  formula('consul', 'http://www.consul.io')
+end
+
+task :consul_template do
+  formula('consul-template', 'https://github.com/hashicorp/consul-template')
 end
 
 task :nomad do
-  formula('nomad', 'nomadproject.io')
+  formula('nomad', 'http://www.nomadproject.io')
 end
 
 task :otto do
-  formula('otto', 'ottoproject.io')
+  formula('otto', 'http://www.ottoproject.io')
 end
 
 task :packer do
-  formula('packer', 'packer.io')
+  formula('packer', 'http://www.packer.io')
 end
 
 task :serf do
-  formula('serf', 'serfdom.io')
+  formula('serf', 'http://www.serfdom.io')
 end
 
 task :terraform do
-  formula('terraform', 'terraform.io')
+  formula('terraform', 'http://www.terraform.io')
 end
 
 task :vault do
-  formula('vault', 'vaultproject.io')
+  formula('vault', 'http://www.vaultproject.io')
 end
 
-task :default => [:consul, :nomad, :otto, :packer, :serf, :terraform, :vault]
+task default: [
+  :consul,
+  :consul_template,
+  :nomad,
+  :otto,
+  :packer,
+  :serf,
+  :terraform,
+  :vault
+]
