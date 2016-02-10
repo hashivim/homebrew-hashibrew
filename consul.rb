@@ -1,7 +1,7 @@
 require 'formula'
 
 class Consul < Formula
-  homepage 'http://www.consul.io'
+  homepage 'https://www.consul.io'
   version '0.6.3'
 
   url 'https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_darwin_amd64.zip'

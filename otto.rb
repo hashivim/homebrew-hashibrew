@@ -1,7 +1,7 @@
 require 'formula'
 
 class Otto < Formula
-  homepage 'http://www.ottoproject.io'
+  homepage 'https://www.ottoproject.io'
   version '0.2.0'
 
   url 'https://releases.hashicorp.com/otto/0.2.0/otto_0.2.0_darwin_amd64.zip'

@@ -1,7 +1,7 @@
 require 'formula'
 
 class Packer < Formula
-  homepage 'http://www.packer.io'
+  homepage 'https://www.packer.io'
   version '0.8.6'
 
   url 'https://releases.hashicorp.com/packer/0.8.6/packer_0.8.6_darwin_amd64.zip'

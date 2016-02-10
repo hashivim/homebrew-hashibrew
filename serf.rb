@@ -1,7 +1,7 @@
 require 'formula'
 
 class Serf < Formula
-  homepage 'http://www.serfdom.io'
+  homepage 'https://www.serfdom.io'
   version '0.7.0'
 
   url 'https://releases.hashicorp.com/serf/0.7.0/serf_0.7.0_darwin_amd64.zip'

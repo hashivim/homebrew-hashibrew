@@ -1,7 +1,7 @@
 require 'formula'
 
 class Nomad < Formula
-  homepage 'http://www.nomadproject.io'
+  homepage 'https://www.nomadproject.io'
   version '0.2.3'
 
   url 'https://releases.hashicorp.com/nomad/0.2.3/nomad_0.2.3_darwin_amd64.zip'

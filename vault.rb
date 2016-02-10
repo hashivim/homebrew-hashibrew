@@ -1,7 +1,7 @@
 require 'formula'
 
 class Vault < Formula
-  homepage 'http://www.vaultproject.io'
+  homepage 'https://www.vaultproject.io'
   version '0.5.0'
 
   url 'https://releases.hashicorp.com/vault/0.5.0/vault_0.5.0_darwin_amd64.zip'

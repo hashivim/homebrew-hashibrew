@@ -24,7 +24,7 @@ def formula(name, homepage)
 end
 
 task :consul do
-  formula('consul', 'http://www.consul.io')
+  formula('consul', 'https://www.consul.io')
 end
 
 task :envconsul do
@@ -36,27 +36,27 @@ task :consul_template do
 end
 
 task :nomad do
-  formula('nomad', 'http://www.nomadproject.io')
+  formula('nomad', 'https://www.nomadproject.io')
 end
 
 task :otto do
-  formula('otto', 'http://www.ottoproject.io')
+  formula('otto', 'https://www.ottoproject.io')
 end
 
 task :packer do
-  formula('packer', 'http://www.packer.io')
+  formula('packer', 'https://www.packer.io')
 end
 
 task :serf do
-  formula('serf', 'http://www.serfdom.io')
+  formula('serf', 'https://www.serfdom.io')
 end
 
 task :terraform do
-  formula('terraform', 'http://www.terraform.io')
+  formula('terraform', 'https://www.terraform.io')
 end
 
 task :vault do
-  formula('vault', 'http://www.vaultproject.io')
+  formula('vault', 'https://www.vaultproject.io')
 end
 
 task default: [

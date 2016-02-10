@@ -1,7 +1,7 @@
 require 'formula'
 
 class Terraform < Formula
-  homepage 'http://www.terraform.io'
+  homepage 'https://www.terraform.io'
   version '0.6.11'
 
   url 'https://releases.hashicorp.com/terraform/0.6.11/terraform_0.6.11_darwin_amd64.zip'
