@@ -3,19 +3,32 @@ require 'erb'
 require 'open-uri'
 require 'nokogiri'
 
+def version(name)
+  index = Nokogiri::HTML(open("https://releases.hashicorp.com/#{name}/"))
+  slug = index.xpath('//html/body/ul/li')[1].children[1].attributes['href'].to_s
+  slug.split('/')[2]
+end
+
+def sha256sum(name)
+  version = version(name)
+  sha256sums_url = format(
+    'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS',
+    name,
+    version,
+    name,
+    version
+  )
+  sha256sums = open(sha256sums_url).readlines
+  sha256sums.find { |x| /darwin_amd64/.match(x) }.split('  ')[0]
+end
+
 def formula(name, homepage)
   puts "Generating #{name}.rb"
 
   @name = name
   @homepage = homepage
-
-  index = Nokogiri::HTML(open("https://releases.hashicorp.com/#{name}/"))
-  slug = index.xpath('//html/body/ul/li')[1].children[1].attributes['href'].to_s
-  @version = slug.split('/')[2]
-
-  sha256sums_url = "https://releases.hashicorp.com/#{name}/#{@version}/#{name}_#{@version}_SHA256SUMS"
-  sha256sums = open(sha256sums_url).readlines
-  @sha256sum, _filename = sha256sums.find { |x| /darwin_amd64/.match(x) }.split('  ')
+  @version = version(name)
+  @sha256sum = sha256sum(name)
 
   template = File.open('template.erb').read
   File.open("#{name}.rb", 'w') do |f|
@@ -59,7 +72,7 @@ task :vault do
   formula('vault', 'https://www.vaultproject.io')
 end
 
-task default: [
+task :default => [
   :consul,
   :consul_template,
   :envconsul,
