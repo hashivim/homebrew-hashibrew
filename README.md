@@ -27,9 +27,9 @@ non-Cask Homebrew system. Hence, this tap.
 
 ## Using This Tap
 
-All of these formulas (c'mon, "formulae" is silly, we're not speaking
-Latin here) conflict with ones in Homebrew mainline, so you'll need to
-install them with the `markcornick/rogue` prefix, thus:
+Almost all of these formulas (c'mon, "formulae" is silly, we're not
+speaking Latin here) conflict with ones in Homebrew mainline, so
+you'll need to install them with the `markcornick/rogue` prefix, thus:
 
     brew tap install markcornick/rogue/terraform
 

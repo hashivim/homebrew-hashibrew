@@ -27,6 +27,10 @@ task :consul do
   formula('consul', 'http://www.consul.io')
 end
 
+task :envconsul do
+  formula('envconsul', 'https://github.com/hashicorp/envconsul')
+end
+
 task :consul_template do
   formula('consul-template', 'https://github.com/hashicorp/consul-template')
 end
@@ -58,6 +62,7 @@ end
 task default: [
   :consul,
   :consul_template,
+  :envconsul,
   :nomad,
   :otto,
   :packer,
