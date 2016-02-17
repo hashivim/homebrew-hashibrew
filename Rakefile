@@ -1,10 +1,11 @@
 require 'active_support/inflector'
 require 'erb'
-require 'open-uri'
+require 'net/http'
 require 'nokogiri'
 
 def version(name)
-  index = Nokogiri::HTML(open("https://releases.hashicorp.com/#{name}/"))
+  index_url = Net::HTTP.get(URI("https://releases.hashicorp.com/#{name}/"))
+  index = Nokogiri::HTML(index_url)
   slug = index.xpath('//html/body/ul/li')[1].children[1].attributes['href'].to_s
   slug.split('/')[2]
 end
@@ -18,7 +19,7 @@ def sha256sum(name)
     name,
     version
   )
-  sha256sums = open(sha256sums_url).readlines
+  sha256sums = Net::HTTP.get(URI(sha256sums_url)).split("\n")
   sha256sums.find { |x| /darwin_amd64/.match(x) }.split('  ')[0]
 end
 
