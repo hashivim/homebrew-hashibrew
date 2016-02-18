@@ -37,6 +37,10 @@ def formula(name, homepage)
   end
 end
 
+task :atlas_upload_cli do
+  formula('atlas-upload-cli', 'https://github.com/hashicorp/atlas-upload-cli')
+end
+
 task :consul do
   formula('consul', 'https://www.consul.io')
 end
@@ -74,6 +78,7 @@ task :vault do
 end
 
 task :default => [
+  :atlas_upload_cli,
   :consul,
   :consul_template,
   :envconsul,
