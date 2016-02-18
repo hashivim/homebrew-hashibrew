@@ -1,5 +1,3 @@
-require 'formula'
-
 class Vault < Formula
   homepage 'https://www.vaultproject.io'
   version '0.5.0'

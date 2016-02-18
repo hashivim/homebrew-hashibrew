@@ -1,5 +1,3 @@
-require 'formula'
-
 class Packer < Formula
   homepage 'https://www.packer.io'
   version '0.8.6'

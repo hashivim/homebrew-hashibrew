@@ -1,5 +1,3 @@
-require 'formula'
-
 class Serf < Formula
   homepage 'https://www.serfdom.io'
   version '0.7.0'

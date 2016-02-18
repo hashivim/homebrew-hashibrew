@@ -1,5 +1,3 @@
-require 'formula'
-
 class Terraform < Formula
   homepage 'https://www.terraform.io'
   version '0.6.11'

@@ -1,5 +1,3 @@
-require 'formula'
-
 class ConsulTemplate < Formula
   homepage 'https://github.com/hashicorp/consul-template'
   version '0.12.2'

@@ -1,5 +1,3 @@
-require 'formula'
-
 class Consul < Formula
   homepage 'https://www.consul.io'
   version '0.6.3'

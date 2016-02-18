@@ -1,5 +1,3 @@
-require 'formula'
-
 class Otto < Formula
   homepage 'https://www.ottoproject.io'
   version '0.2.0'

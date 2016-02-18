@@ -1,5 +1,3 @@
-require 'formula'
-
 class Envconsul < Formula
   homepage 'https://github.com/hashicorp/envconsul'
   version '0.6.0'

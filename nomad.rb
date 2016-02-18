@@ -1,5 +1,3 @@
-require 'formula'
-
 class Nomad < Formula
   homepage 'https://www.nomadproject.io'
   version '0.2.3'

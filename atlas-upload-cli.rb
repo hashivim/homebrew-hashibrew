@@ -1,5 +1,3 @@
-require 'formula'
-
 class AtlasUploadCli < Formula
   homepage 'https://github.com/hashicorp/atlas-upload-cli'
   version '0.2.0'
