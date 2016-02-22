@@ -35,6 +35,18 @@ def formula(name, homepage)
   end
 end
 
+task :commit do
+  git_status = `git status`.split("\n")
+  modified = git_status.select { |s| /modified:.*rb$/.match(s) }
+  formulas = modified.collect { |m| m.split('   ')[1].gsub(/\.rb$/, '') }
+  formulas.each do |formula|
+    formula_file = File.open("#{formula}.rb").readlines
+    version_line = formula_file.select { |l| /^  version/.match(l) }[0]
+    version = version_line.split("'")[1]
+    system "git commit #{formula}.rb -m '#{formula} #{version}'"
+  end
+end
+
 task :atlas_upload_cli do
   formula('atlas-upload-cli', 'https://github.com/hashicorp/atlas-upload-cli')
 end
@@ -73,18 +85,6 @@ end
 
 task :vault do
   formula('vault', 'https://www.vaultproject.io')
-end
-
-task :commit do
-  git_status = `git status`.split("\n")
-  modified = git_status.select { |s| /modified:.*rb$/.match(s) }
-  formulas = modified.collect { |m| m.split('   ')[1].gsub(/\.rb$/, '') }
-  formulas.each do |formula|
-    formula_file = File.open("#{formula}.rb").readlines
-    version_line = formula_file.select { |l| /^  version/.match(l) }[0]
-    version = version_line.split("'")[1]
-    system "git commit #{formula}.rb -m '#{formula} #{version}'"
-  end
 end
 
 task :formulas => [
