@@ -1,9 +1,9 @@
 class ConsulTemplate < Formula
   homepage 'https://github.com/hashicorp/consul-template'
-  version '0.12.2'
+  version '0.13.0'
 
-  url 'https://releases.hashicorp.com/consul-template/0.12.2/consul-template_0.12.2_darwin_amd64.zip'
-  sha256 'a9ab8e16cb02729153ec72a53f9f9f73efa0259521200467482fb34bd3e893b1'
+  url 'https://releases.hashicorp.com/consul-template/0.13.0/consul-template_0.13.0_darwin_amd64.zip'
+  sha256 'ea7ec46b5922f497b5ffea8a7de2eb33268fc7ff18bd20e1a35af9334c98b5b9'
 
   depends_on :arch => :x86_64
 
