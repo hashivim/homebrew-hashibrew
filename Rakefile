@@ -24,8 +24,6 @@ def sha256sum(name)
 end
 
 def formula(name, homepage)
-  puts "Generating #{name}.rb"
-
   @name = name
   @homepage = homepage
   @version = version(name)
@@ -77,7 +75,19 @@ task :vault do
   formula('vault', 'https://www.vaultproject.io')
 end
 
-task :default => [
+task :commit do
+  git_status = `git status`.split("\n")
+  modified = git_status.select { |s| /modified:.*rb$/.match(s) }
+  formulas = modified.collect { |m| m.split('   ')[1].gsub(/\.rb$/, '') }
+  formulas.each do |formula|
+    formula_file = File.open("#{formula}.rb").readlines
+    version_line = formula_file.select { |l| /^  version/.match(l) }[0]
+    version = version_line.split("'")[1]
+    system "git commit #{formula}.rb -m '#{formula} #{version}'"
+  end
+end
+
+task :formulas => [
   :atlas_upload_cli,
   :consul,
   :consul_template,
@@ -88,4 +98,9 @@ task :default => [
   :serf,
   :terraform,
   :vault
+]
+
+task :default => [
+  :formulas,
+  :commit
 ]
