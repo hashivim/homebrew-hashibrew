@@ -45,8 +45,7 @@ Maintenance of this tap is entirely automated with Rake.
 
 -   `rake formulas` will update all the formulas.
 
--   `rake commit` will find modified formulas, commit them to Git, and push
-    to origin.
+-   `rake commit` will find modified formulas and commit them to Git.
 
 -   `rake default` does `rake formulas`, then `rake commit`.
 

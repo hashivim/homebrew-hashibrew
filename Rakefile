@@ -45,7 +45,6 @@ task :commit do
     version = version_line.split("'")[1]
     system "git commit #{formula}.rb -m '#{formula} #{version}'"
   end
-  system 'git push origin master'
 end
 
 task :atlas_upload_cli do
