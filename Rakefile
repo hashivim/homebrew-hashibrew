@@ -3,11 +3,17 @@ require 'erb'
 require 'net/http'
 require 'nokogiri'
 
+def version_string(nokogiri_element)
+  nokogiri_element.children[1].attributes['href'].to_s.split('/')[2]
+end
+
 def version(name)
   index_url = Net::HTTP.get(URI("https://releases.hashicorp.com/#{name}/"))
   index = Nokogiri::HTML(index_url)
-  slug = index.xpath('//html/body/ul/li')[1].children[1].attributes['href'].to_s
-  slug.split('/')[2]
+  li = index.xpath('//html/body/ul/li').reject do |x|
+    /\-rc/.match(version_string(x))
+  end
+  version_string(li[1])
 end
 
 def sha256sum(name)
