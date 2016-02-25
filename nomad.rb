@@ -1,9 +1,9 @@
 class Nomad < Formula
   homepage 'https://www.nomadproject.io'
-  version '0.2.3'
+  version '0.3.0'
 
-  url 'https://releases.hashicorp.com/nomad/0.2.3/nomad_0.2.3_darwin_amd64.zip'
-  sha256 'ad7caf0641bb7be2aab0dd2496545461010cbc667a857aaac4f10b7296c59ca9'
+  url 'https://releases.hashicorp.com/nomad/0.3.0/nomad_0.3.0_darwin_amd64.zip'
+  sha256 'dd2d769ccceb532849072c4e088ebd1f338a0e60916cfe4317a2661716803894'
 
   depends_on :arch => :x86_64
 
