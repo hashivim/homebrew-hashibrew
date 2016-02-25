@@ -1,9 +1,9 @@
 class Terraform < Formula
   homepage 'https://www.terraform.io'
-  version '0.6.11'
+  version '0.6.12'
 
-  url 'https://releases.hashicorp.com/terraform/0.6.11/terraform_0.6.11_darwin_amd64.zip'
-  sha256 '9802b1d56576bea86e34fd3800e100eb043ab6de5a5fa40f7f05a0a44f364dd2'
+  url 'https://releases.hashicorp.com/terraform/0.6.12/terraform_0.6.12_darwin_amd64.zip'
+  sha256 'eaa50e05a88ef83a9ba18a3768932f4d530ce1b710b29ae29992f94addac0bfb'
 
   depends_on :arch => :x86_64
 
