@@ -1,9 +1,9 @@
 class Vault < Formula
   homepage 'https://www.vaultproject.io'
-  version '0.5.0'
+  version '0.5.1'
 
-  url 'https://releases.hashicorp.com/vault/0.5.0/vault_0.5.0_darwin_amd64.zip'
-  sha256 '8f5ca5927f876737566a23442f098afa1ed3dc9d5b238c3c8f7563e06ab6c64c'
+  url 'https://releases.hashicorp.com/vault/0.5.1/vault_0.5.1_darwin_amd64.zip'
+  sha256 '0466e5a0bfe777586ce4c9b3dfa9f48bbc6e902550aefbb2281725a3bd46179c'
 
   depends_on :arch => :x86_64
 
