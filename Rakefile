@@ -65,6 +65,10 @@ task :envconsul do
   formula('envconsul', 'https://github.com/hashicorp/envconsul')
 end
 
+task :consul_replicate do
+  formula('consul-replicate', 'https://github.com/hashicorp/consul-replicate')
+end
+
 task :consul_template do
   formula('consul-template', 'https://github.com/hashicorp/consul-template')
 end
@@ -96,6 +100,7 @@ end
 task :formulas => [
   :atlas_upload_cli,
   :consul,
+  :consul_replicate,
   :consul_template,
   :envconsul,
   :nomad,
