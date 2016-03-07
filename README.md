@@ -10,17 +10,17 @@ official Homebrew organization doesn't do.
 I use several of the Hashicorp tools. The current state of installing
 and keeping these tools up-to-date is pretty disappointing:
 
--   Hashicorp themselves distribute binaries as simple zip files; there
-    are no official OS-native packages.
+* Hashicorp themselves distribute binaries as simple zip files; there
+  are no official OS-native packages.
 
--   Homebrew requires everything to be built from source, and their
-    process for building Go code with dependencies is weird and
-    cumbersome, meaning packages for new releases are often delayed.
+* Homebrew requires everything to be built from source, and their
+  process for building Go code with dependencies is weird and
+  cumbersome, meaning packages for new releases are often delayed.
 
--   Homebrew Cask packages Hashicorp's binaries directly, but Cask's
-    facilities for finding out-of-date packages and upgrading them are
-    non-existent, which makes this no better than using the binaries
-    directly.
+* Homebrew Cask packages Hashicorp's official binaries, but Cask's
+  facilities for finding out-of-date packages and upgrading them are
+  non-existent, which makes this no better than using the binaries
+  directly.
 
 What I want is to use the official binaries with the mainstream,
 non-Cask Homebrew system. Hence, this tap.
@@ -41,16 +41,13 @@ responsible for anything that happens.
 
 Maintenance of this tap is entirely automated with Rake.
 
--   `rake` followed by the name of a formula will update that formula.
-
--   `rake formulas` will update all the formulas.
-
--   `rake commit` will find modified formulas and commit them to Git.
-
--   `rake default` does `rake formulas`, then `rake commit`.
+* `rake` followed by the name of a formula will update that formula.
+* `rake formulas` will update all the formulas.
+* `rake commit` will find modified formulas and commit them to Git.
+* `rake default` does `rake formulas`, then `rake commit`.
 
 To add a new product, simply add a Rake task similar to the ones that
-already exist. 
+already exist.
 
 ## Contributing
 
