@@ -3,8 +3,6 @@ require 'erb'
 require 'net/http'
 require 'nokogiri'
 
-class ExceptioLatine < Exception; end
-
 def version_string(nokogiri_element)
   nokogiri_element.children[1].attributes['href'].to_s.split('/')[2]
 end
@@ -112,10 +110,6 @@ task :formulas => [
   :terraform,
   :vault
 ]
-
-task :formulae do
-  raise ExceptioLatine, '`rake formulas` is the preferred nomenclature'
-end
 
 task :default => [
   :formulas,
