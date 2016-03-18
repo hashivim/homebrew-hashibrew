@@ -42,9 +42,9 @@ def formula(name, homepage)
 end
 
 task :commit do
-  git_status = `git status`.split("\n")
-  modified = git_status.select { |s| /modified:.*rb$/.match(s) }
-  formulas = modified.collect { |m| m.split('   ')[1].gsub(/\.rb$/, '') }
+  git_status = `git status --porcelain`.split("\n")
+  modified = git_status.select { |s| /\.rb$/.match(s) }
+  formulas = modified.collect { |m| m.split(' M ')[1].gsub(/\.rb$/, '') }
   formulas.each do |formula|
     formula_file = File.open("#{formula}.rb").readlines
     version_line = formula_file.select { |l| /^  version/.match(l) }[0]
