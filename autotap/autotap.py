@@ -4,6 +4,7 @@
 
 import configparser
 import html.parser
+import os.path
 import re
 import string
 import subprocess
@@ -61,7 +62,7 @@ def create_formula(product, version, homepage):
     """Write a formula file."""
     with open('template.txt') as f:
         template = string.Template(f.read())
-    with open('%s.rb' % product, 'w') as f:
+    with open(os.path.join('..', '%s.rb' % product), 'w') as f:
         f.write(template.substitute(
             homepage=homepage,
             product=product,
