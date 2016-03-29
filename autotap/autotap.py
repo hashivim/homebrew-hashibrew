@@ -66,7 +66,7 @@ def ruby_classify(product):
 def generate_formulas():
     """Generate the complete set of formulas."""
     products = configparser.ConfigParser()
-    products.read('products.cfg')
+    products.read('products.ini')
     for product in products.sections():
         url = 'https://releases.hashicorp.com/%s/' % product
         parser = hashicorp_releases_parser()
