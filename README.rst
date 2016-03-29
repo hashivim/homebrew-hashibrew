@@ -49,7 +49,7 @@ Maintenance of this tap is entirely automated with the ``autotap.py``
 script. Run it to update all formulas and commit modified formulas to
 Git.
 
-The list of products for which taps are generated is in the
+The list of products for which formulas are generated is in the
 ``products.ini`` file. To add a new product, simply add a new section to
 this file listing its homepage.
 
