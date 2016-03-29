@@ -53,12 +53,19 @@ The list of products for which taps are generated is in the
 ``products.ini`` file. To add a new product, simply add a new section to
 this file listing its homepage.
 
+``autotap.py`` is possible because the format of
+https://releases.hashicorp.com/ is so consistent and predictable. Should
+Hashicorp decide to change this in the future, ``autotap.py`` may need
+some changes, or may stop working entirely. If you notice this before I
+do, please open an issue.
+
 Contributing
 ------------
 
-Sorry, but please don't. This tap is really just meant to satisfy my
-cantankerousness, so let me deal with it. Energy would be better spent
-trying to get Homebrew Cask to properly do outdated/upgrade detection,
-such as is common in modern package management, or to get Homebrew to
-deal with building Go packages in a less painful way. Pull requests will
-be ignored. Thanks for understanding.
+Pull requests will be accepted for the following reasons only:
+
+-  to add entirely new Hashicorp products
+-  to refactor, correct, or otherwise improve ``autotap.py``
+
+Pull requests that merely update versions of existing products will be
+rejected. That's what ``autotap.py`` is for, and I'll run it as neeeded.
