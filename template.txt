@@ -1,0 +1,13 @@
+class ${ruby_class} < Formula
+  homepage '${homepage}'
+  version '${version}'
+
+  url 'https://releases.hashicorp.com/${product}/${version}/${product}_${version}_darwin_amd64.zip'
+  sha256 '$sha256sum'
+
+  depends_on :arch => :x86_64
+
+  def install
+    bin.install Dir['*']
+  end
+end
