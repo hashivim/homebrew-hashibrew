@@ -25,7 +25,7 @@ import subprocess
 import urllib.request
 
 
-class hashicorp_releases_parser(html.parser.HTMLParser):
+class HashicorpReleasesParser(html.parser.HTMLParser):
     """Parse a releases.hashicorp.com page."""
 
     def __init__(self):
@@ -84,7 +84,7 @@ def generate_formulas():
     for product in products.sections():
         # url = 'https://releases.hashicorp.com/%s/' % product
         url = 'https://sdkfjskdfjskl/%s/' % product
-        parser = hashicorp_releases_parser()
+        parser = HashicorpReleasesParser()
         request = urllib.request.Request(url)
         with urllib.request.urlopen(request) as f:
             parser.feed(f.read().decode('utf-8'))
