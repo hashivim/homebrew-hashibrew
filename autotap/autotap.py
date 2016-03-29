@@ -17,33 +17,19 @@ class hashicorp_releases_parser(html.parser.HTMLParser):
     def __init__(self):
         """Initialize the parser."""
         html.parser.HTMLParser.__init__(self)
-        self.in_a = False
-        self.in_li = False
         self.product = ''
         self.version = ''
         self.versions = []
 
-    def handle_starttag(self, tag, attrs):
-        """Detect opening tags."""
-        if tag == "li":
-            self.in_li = True
-        if tag == "a" and self.in_li:
-            self.in_a = True
+    def handle_data(self, data):
+        """Look for version strings."""
+        if re.search('_\d+\.\d+\.\d+$', data):
+            self.versions.append(data)
 
     def handle_endtag(self, tag):
-        """Detect closing tags."""
-        if tag == "a":
-            self.in_a = False
-        if tag == "li":
-            self.in_li = False
+        """Stash most recent version found."""
         if tag == "html":
             self.product, self.version = self.versions[0].split('_')
-
-    def handle_data(self, data):
-        """Collect versions found in A tags."""
-        if self.in_a:
-            if not re.search('\.\.|\-rc.$', data):
-                self.versions.append(data)
 
 
 def sha256sum(product, version):
