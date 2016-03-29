@@ -82,7 +82,8 @@ def generate_formulas():
     products = configparser.ConfigParser()
     products.read('products.ini')
     for product in products.sections():
-        url = 'https://releases.hashicorp.com/%s/' % product
+        # url = 'https://releases.hashicorp.com/%s/' % product
+        url = 'https://sdkfjskdfjskl/%s/' % product
         parser = hashicorp_releases_parser()
         request = urllib.request.Request(url)
         with urllib.request.urlopen(request) as f:
