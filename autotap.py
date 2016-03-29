@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-"""Generate homebrew-rogue formulas."""
+"""Automatically maintain the homebrew-rogue tap."""
 
+import configparser
 import html.parser
 import re
 import string
+import subprocess
 import urllib.request
 
 
@@ -39,7 +41,7 @@ class hashicorp_releases_parser(html.parser.HTMLParser):
     def handle_data(self, data):
         """Collect versions found in A tags."""
         if self.in_a:
-            if not re.search('\.\.|rc', data):
+            if not re.search('\.\.|\-rc.$', data):
                 self.versions.append(data)
 
 
@@ -74,26 +76,12 @@ def ruby_classify(product):
     return "".join(i.title() for i in product.split('-'))
 
 
-def main():
+def generate_formulas():
     """Generate the complete set of formulas."""
-    products = [
-        ('atlas-upload-cli', 'https://github.com/hashicorp/atlas-upload-cli'),
-        ('consul', 'https://www.consul.io'),
-        ('envconsul', 'https://github.com/hashicorp/envconsul'),
-        ('consul-replicate', 'https://github.com/hashicorp/consul-replicate'),
-        ('consul-template', 'https://github.com/hashicorp/consul-template'),
-        ('nomad', 'https://www.nomadproject.io'),
-        ('otto', 'https://www.ottoproject.io'),
-        ('packer', 'https://www.packer.io'),
-        ('serf', 'https://www.serfdom.io'),
-        ('terraform', 'https://www.terraform.io'),
-        ('vault', 'https://www.vaultproject.io')
-    ]
-
-    for product in products:
-        name = product[0]
-        homepage = product[1]
-        url = 'https://releases.hashicorp.com/%s/' % name
+    products = configparser.ConfigParser()
+    products.read('products.cfg')
+    for product in products.sections():
+        url = 'https://releases.hashicorp.com/%s/' % product
         parser = hashicorp_releases_parser()
         request = urllib.request.Request(url)
         with urllib.request.urlopen(request) as f:
@@ -101,8 +89,35 @@ def main():
         create_formula(
             parser.product,
             parser.version,
-            homepage
+            products[product]['homepage']
         )
+
+
+def git_commit():
+    """Commit modified formulas to Git."""
+    git_status = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            stdout=subprocess.PIPE
+        ).stdout.decode('utf-8').split('\n')
+    modified = [l for l in git_status if re.search('\.rb$', l)]
+    for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
+        with open('%s.rb' % formula) as f:
+            formula_file = f.read().split('\n')
+        vl = [l for l in formula_file if re.match('^  version', l)][0]
+        version = vl.split("'")[1]
+        subprocess.run([
+            'git',
+            'commit',
+            '%s.rb' % formula,
+            '-m'
+            '%s %s' % (formula, version)
+        ])
+
+
+def main():
+    """Pull it all together."""
+    generate_formulas()
+    git_commit()
 
 if __name__ == '__main__':
     main()
