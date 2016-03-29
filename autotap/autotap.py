@@ -37,7 +37,7 @@ class hashicorp_releases_parser(html.parser.HTMLParser):
 
     def handle_data(self, data):
         """Look for version strings."""
-        if re.search('_\d+\.\d+\.\d+$', data):
+        if re.search(r'_\d+\.\d+\.\d+$', data):
             self.versions.append(data)
 
     def handle_endtag(self, tag):
@@ -97,10 +97,10 @@ def generate_formulas():
 def git_commit():
     """Commit modified formulas to Git."""
     git_status = subprocess.run(
-            ['git', 'status', '--porcelain'],
-            stdout=subprocess.PIPE
-        ).stdout.decode('utf-8').split('\n')
-    modified = [l for l in git_status if re.search('\.rb$', l)]
+        ['git', 'status', '--porcelain'],
+        stdout=subprocess.PIPE
+    ).stdout.decode('utf-8').split('\n')
+    modified = [l for l in git_status if re.search(r'\.rb$', l)]
     for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
         with open('%s.rb' % formula) as f:
             formula_file = f.read().split('\n')
