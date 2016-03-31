@@ -16,6 +16,7 @@
 
 """Automatically maintain the homebrew-rogue tap."""
 
+import argparse
 import configparser
 import html.parser
 import os.path
@@ -77,11 +78,13 @@ def ruby_classify(product):
     return "".join(i.title() for i in product.split('-'))
 
 
-def generate_formulas():
+def generate_formulas(formulas=[]):
     """Generate the complete set of formulas."""
     products = configparser.ConfigParser()
     products.read('products.ini')
-    for product in products.sections():
+    if not formulas:
+        formulas = products.sections()
+    for product in formulas:
         url = 'https://releases.hashicorp.com/%s/' % product
         parser = HashicorpReleasesParser()
         request = urllib.request.Request(url)
@@ -117,7 +120,13 @@ def git_commit():
 
 def main():
     """Pull it all together."""
-    generate_formulas()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('formula',
+                        help='Formula(s) to generate (default: all formulas)',
+                        type=str,
+                        nargs='*',
+                        default='')
+    generate_formulas(parser.parse_args().formula)
     git_commit()
 
 if __name__ == '__main__':
