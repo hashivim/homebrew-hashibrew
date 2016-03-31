@@ -102,14 +102,14 @@ def git_commit():
     ).stdout.decode('utf-8').split('\n')
     modified = [l for l in git_status if re.search(r'\.rb$', l)]
     for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
-        with open('%s.rb' % formula) as f:
+        with open('../%s.rb' % formula) as f:
             formula_file = f.read().split('\n')
         vl = [l for l in formula_file if re.match('^  version', l)][0]
         version = vl.split("'")[1]
         subprocess.run([
             'git',
             'commit',
-            '%s.rb' % formula,
+            '../%s.rb' % formula,
             '-m'
             '%s %s' % (formula, version)
         ])
