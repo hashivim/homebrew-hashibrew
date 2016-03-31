@@ -103,7 +103,7 @@ def git_commit():
         ['git', 'status', '--porcelain'],
         stdout=subprocess.PIPE
     ).stdout.decode('utf-8').split('\n')
-    modified = [l for l in git_status if re.search(r'\.rb$', l)]
+    modified = [l for l in git_status if re.search(r'^ M .*\.rb$', l)]
     for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
         with open('../%s.rb' % formula) as f:
             formula_file = f.read().split('\n')
