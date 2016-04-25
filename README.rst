@@ -30,13 +30,19 @@ non-Cask Homebrew system. Hence, this tap.
 Using This Tap
 --------------
 
+First tap the repo.
+
+::
+
+    brew tap markcornick/rogue
+
 Almost all of these formulas (c'mon, "formulae" is silly, we're not
 speaking Latin here) conflict with ones in Homebrew mainline, so you'll
 need to install them with the ``markcornick/rogue`` prefix, thus:
 
 ::
 
-    brew tap install markcornick/rogue/terraform
+    brew install markcornick/rogue/terraform
 
 Keep in mind that you are intentionally messing with the Homebrew
 space-time continuum by using this tap. I cannot and will not be held
