@@ -53,7 +53,7 @@ The list of products for which formulas are generated is in the
 ``products.ini`` file. To add a new product, simply add a new section to
 this file listing its homepage.
 
-``autotap.py`` is possible because the format of
+``autotap.py`` is possible because the format of the zip files and of
 https://releases.hashicorp.com/ is so consistent and predictable. Should
 Hashicorp decide to change this in the future, ``autotap.py`` may need
 some changes, or may stop working entirely. If you notice this before I
