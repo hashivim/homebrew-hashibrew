@@ -47,6 +47,15 @@ class HashicorpReleasesParser(html.parser.HTMLParser):
             self.product, self.version = self.versions[0].split('_')
 
 
+def formula_path(product):
+    """Get the path to a product's formula file."""
+    return os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        '..',
+        '%s.rb' % product
+    )
+
+
 def sha256sum(product, version):
     """Get the SHA256 sum for a product and version."""
     url = 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
@@ -63,7 +72,7 @@ def create_formula(product, version, homepage):
     """Write a formula file."""
     with open('template.txt') as f:
         template = string.Template(f.read())
-    with open(os.path.join('..', '%s.rb' % product), 'w') as f:
+    with open(formula_path(product), 'w') as f:
         f.write(template.substitute(
             homepage=homepage,
             product=product,
@@ -105,14 +114,14 @@ def git_commit():
     ).stdout.decode('utf-8').split('\n')
     modified = [l for l in git_status if re.search(r'^ M .*\.rb$', l)]
     for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
-        with open('../%s.rb' % formula) as f:
+        with open(formula_path(formula)) as f:
             formula_file = f.read().split('\n')
         vl = [l for l in formula_file if re.match('^  version', l)][0]
         version = vl.split("'")[1]
         subprocess.run([
             'git',
             'commit',
-            '../%s.rb' % formula,
+            formula_path(formula),
             '-m'
             '%s %s' % (formula, version)
         ])
