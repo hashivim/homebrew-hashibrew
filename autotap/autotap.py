@@ -86,7 +86,6 @@ def ruby_classify(product):
 def generate_formulas(formulas=[]):
     """Generate the complete set of formulas."""
     products = configparser.ConfigParser()
-    products.read('products.ini')
     products.read(os.path.join(os.path.dirname(__file__), 'products.ini'))
     if not formulas:
         formulas = products.sections()
