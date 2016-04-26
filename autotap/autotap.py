@@ -49,11 +49,7 @@ class HashicorpReleasesParser(html.parser.HTMLParser):
 
 def formula_path(product):
     """Get the path to a product's formula file."""
-    return os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        '..',
-        '%s.rb' % product
-    )
+    return os.path.join(os.path.dirname(__file__), '..', '%s.rb' % product)
 
 
 def sha256sum(product, version):
@@ -70,7 +66,7 @@ def sha256sum(product, version):
 
 def create_formula(product, version, homepage):
     """Write a formula file."""
-    with open('template.txt') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'template.txt')) as f:
         template = string.Template(f.read())
     with open(formula_path(product), 'w') as f:
         f.write(template.substitute(
@@ -91,6 +87,7 @@ def generate_formulas(formulas=[]):
     """Generate the complete set of formulas."""
     products = configparser.ConfigParser()
     products.read('products.ini')
+    products.read(os.path.join(os.path.dirname(__file__), 'products.ini'))
     if not formulas:
         formulas = products.sections()
     for product in formulas:
