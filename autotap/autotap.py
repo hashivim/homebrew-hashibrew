@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 # Copyright 2016 Mark Cornick
 #
@@ -16,21 +16,21 @@
 
 """Automatically maintain the homebrew-rogue tap."""
 
-import configparser
-import html.parser
 import os.path
 import re
 import string
 import subprocess
-import urllib.request
+from six.moves import configparser
+from six.moves import html_parser
+from six.moves.urllib.request import urlopen
 
 
-class HashicorpReleasesParser(html.parser.HTMLParser):
+class HashicorpReleasesParser(html_parser.HTMLParser):
     """Parse a releases.hashicorp.com page."""
 
     def __init__(self):
         """Initialize the parser."""
-        html.parser.HTMLParser.__init__(self)
+        html_parser.HTMLParser.__init__(self)
         self.product = ''
         self.version = ''
         self.versions = []
@@ -56,9 +56,8 @@ def sha256sum(product, version):
     url = 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
         product, version, product, version
     )
-    request = urllib.request.Request(url)
-    with urllib.request.urlopen(request) as f:
-        sha256sums = f.read().decode('utf-8').split('\n')
+    f = urlopen(url)
+    sha256sums = f.read().decode('utf-8').split('\n')
     line = [l for l in sha256sums if re.search('darwin_amd64', l)][0]
     return line.split()[0]
 
@@ -89,29 +88,27 @@ def generate_formulas():
     for product in products.sections():
         url = 'https://releases.hashicorp.com/%s/' % product
         parser = HashicorpReleasesParser()
-        request = urllib.request.Request(url)
-        with urllib.request.urlopen(request) as f:
-            parser.feed(f.read().decode('utf-8'))
+        f = urlopen(url)
+        parser.feed(f.read().decode('utf-8'))
         create_formula(
             parser.product,
             parser.version,
-            products[product]['homepage']
+            products.get(product, 'homepage')
         )
 
 
 def git_commit():
     """Commit modified formulas to Git."""
-    git_status = subprocess.run(
-        ['git', 'status', '--porcelain'],
-        stdout=subprocess.PIPE
-    ).stdout.decode('utf-8').split('\n')
+    git_status = subprocess.check_output(
+        ['git', 'status', '--porcelain']
+    ).decode('utf-8').split('\n')
     modified = [l for l in git_status if re.search(r'^ M .*\.rb$', l)]
     for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
         with open(formula_path(formula)) as f:
             formula_file = f.read().split('\n')
         vl = [l for l in formula_file if re.match('^  version', l)][0]
         version = vl.split("'")[1]
-        subprocess.run([
+        subprocess.call([
             'git',
             'commit',
             formula_path(formula),
