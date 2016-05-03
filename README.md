@@ -19,7 +19,9 @@ and keeping these products up-to-date is pretty disappointing:
     binaries directly.
 
 This tap (named "rogue" for historical reasons) lets you use the official
-binaries with the core, non-Cask Homebrew system.
+binaries with the core, non-Cask Homebrew system. It includes all of the
+core Hashicorp tools except for Vagrant (which is distributed as a DMG
+file) as well as some additional tools.
 
 ## Using This Tap
 
@@ -63,3 +65,8 @@ it as needed.
 Issues regarding the Hashicorp products should be directed to Hashicorp.
 Issues regarding Homebrew should be directed to Homebrew. Remember, this
 tap is not affiliated with or endorsed by either Hashicorp or Homebrew.
+
+## Future Plans
+
+If it can be done without messing up everyone's Homebrew setups, this
+tap could/should be renamed from "rogue" to something else.
