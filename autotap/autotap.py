@@ -31,7 +31,7 @@ class HashicorpReleasesParser(html_parser.HTMLParser):
     def __init__(self):
         """Initialize the parser."""
         html_parser.HTMLParser.__init__(self)
-        self.product = ''
+        self.name = ''
         self.version = ''
         self.versions = []
 
@@ -43,18 +43,25 @@ class HashicorpReleasesParser(html_parser.HTMLParser):
     def handle_endtag(self, tag):
         """Stash most recent version found."""
         if tag == "html":
-            self.product, self.version = self.versions[0].split('_')
+            self.name, self.version = self.versions[0].split('_')
 
 
 def formula_path(product):
     """Get the path to a product's formula file."""
-    return os.path.join(os.path.dirname(__file__), '..', '%s.rb' % product)
+    return os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        '%s.rb' % product['name']
+    )
 
 
-def sha256sum(product, version):
-    """Get the SHA256 sum for a product and version."""
+def sha256sum(product):
+    """Get the SHA256 sum for a product."""
     url = 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
-        product, version, product, version
+        product['name'],
+        product['version'],
+        product['name'],
+        product['version']
     )
     f = urlopen(url)
     sha256sums = f.read().decode('utf-8').split('\n')
@@ -62,41 +69,41 @@ def sha256sum(product, version):
     return line.split()[0]
 
 
-def create_formula(product, description, version, homepage):
+def ruby_classify(product):
+    """Convert a product name to a Ruby class name."""
+    return "".join(i.title() for i in product['name'].split('-'))
+
+
+def create_formula(product):
     """Write a formula file."""
     with open(os.path.join(os.path.dirname(__file__), 'template.txt')) as f:
         template = string.Template(f.read())
     with open(formula_path(product), 'w') as f:
-        f.write(template.substitute(
-            description=description,
-            homepage=homepage,
-            product=product,
-            ruby_class=ruby_classify(product),
-            sha256sum=sha256sum(product, version),
-            version=version
-        ))
-
-
-def ruby_classify(product):
-    """Convert a product name to a Ruby class name."""
-    return "".join(i.title() for i in product.split('-'))
+        f.write(template.substitute({
+            'description': product['description'],
+            'homepage': product['homepage'],
+            'name': product['name'],
+            'ruby_class': ruby_classify(product),
+            'sha256sum': sha256sum(product),
+            'version': product['version']
+        }))
 
 
 def generate_formulas():
     """Generate the complete set of formulas."""
     products = configparser.ConfigParser()
     products.read(os.path.join(os.path.dirname(__file__), 'products.ini'))
-    for product in products.sections():
-        url = 'https://releases.hashicorp.com/%s/' % product
+    for section in products.sections():
+        url = 'https://releases.hashicorp.com/%s/' % section
         parser = HashicorpReleasesParser()
         f = urlopen(url)
         parser.feed(f.read().decode('utf-8'))
-        create_formula(
-            parser.product,
-            products.get(product, 'description'),
-            parser.version,
-            products.get(product, 'homepage')
-        )
+        create_formula({
+            'description': products.get(section, 'description'),
+            'homepage': products.get(section, 'homepage'),
+            'name': parser.name,
+            'version': parser.version
+        })
 
 
 def git_commit():
