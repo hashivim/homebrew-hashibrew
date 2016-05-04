@@ -1,4 +1,5 @@
 class Vault < Formula
+  description 'A tool for managing secrets'
   homepage 'https://www.vaultproject.io'
   version '0.5.2'
 

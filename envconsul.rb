@@ -1,4 +1,5 @@
 class Envconsul < Formula
+  description 'Read and set environmental variables for processes from Consul'
   homepage 'https://github.com/hashicorp/envconsul'
   version '0.6.1'
 

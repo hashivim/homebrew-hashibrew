@@ -1,4 +1,5 @@
 class AtlasUploadCli < Formula
+  description 'CLI to upload application code to Atlas'
   homepage 'https://github.com/hashicorp/atlas-upload-cli'
   version '0.2.0'
 

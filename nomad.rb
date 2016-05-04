@@ -1,4 +1,5 @@
 class Nomad < Formula
+  description 'A Distributed, Highly Available, Datacenter-Aware Scheduler'
   homepage 'https://www.nomadproject.io'
   version '0.3.2'
 

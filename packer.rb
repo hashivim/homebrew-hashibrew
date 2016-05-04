@@ -1,4 +1,5 @@
 class Packer < Formula
+  description 'A tool for creating identical machine images for multiple platforms from a single source configuration'
   homepage 'https://www.packer.io'
   version '0.10.0'
 

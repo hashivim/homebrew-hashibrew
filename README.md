@@ -43,7 +43,7 @@ Git.
 
 The list of products for which formulas are generated is in the
 `products.ini` file. To add a new product, simply add a new section to
-this file listing its homepage.
+this file listing its description and homepage.
 
 `autotap.py` is possible because the format of the zip files and of
 <https://releases.hashicorp.com/> is so consistent and predictable.

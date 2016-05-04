@@ -1,4 +1,5 @@
 class Otto < Formula
+  description 'Development and deployment made easy'
   homepage 'https://www.ottoproject.io'
   version '0.2.0'
 

@@ -1,4 +1,5 @@
 class Consul < Formula
+  description 'A tool for service discovery, monitoring and configuration'
   homepage 'https://www.consul.io'
   version '0.6.4'
 
