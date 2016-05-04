@@ -18,11 +18,12 @@
 
 import os.path
 import re
-import string
 import subprocess
+from semantic_version import Version
 from six.moves import configparser
 from six.moves import html_parser
 from six.moves.urllib.request import urlopen
+from string import Template
 
 
 class HashicorpReleasesParser(html_parser.HTMLParser):
@@ -31,19 +32,14 @@ class HashicorpReleasesParser(html_parser.HTMLParser):
     def __init__(self):
         """Initialize the parser."""
         html_parser.HTMLParser.__init__(self)
-        self.name = ''
-        self.version = ''
-        self.versions = []
+        self.version = '0.0.0'
 
     def handle_data(self, data):
         """Look for version strings."""
         if re.search(r'_\d+\.\d+\.\d+$', data):
-            self.versions.append(data)
-
-    def handle_endtag(self, tag):
-        """Stash most recent version found."""
-        if tag == "html":
-            self.name, self.version = self.versions[0].split('_')
+            this_version = data.split('_')[1]
+            if Version(this_version) > Version(self.version):
+                self.version = this_version
 
 
 def formula_path(product):
@@ -77,7 +73,7 @@ def ruby_classify(product):
 def create_formula(product):
     """Write a formula file."""
     with open(os.path.join(os.path.dirname(__file__), 'template.txt')) as f:
-        template = string.Template(f.read())
+        template = Template(f.read())
     with open(formula_path(product), 'w') as f:
         f.write(template.substitute({
             'desc': product['desc'],
@@ -101,7 +97,7 @@ def generate_formulas():
         create_formula({
             'desc': products.get(section, 'desc'),
             'homepage': products.get(section, 'homepage'),
-            'name': parser.name,
+            'name': section,
             'version': parser.version
         })
 
