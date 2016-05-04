@@ -1,5 +1,5 @@
 class Terraform < Formula
-  description 'A tool for building, changing, and combining infrastructure safely and efficiently'
+  desc 'A tool for building, changing, and combining infrastructure safely and efficiently'
   homepage 'https://www.terraform.io'
   version '0.6.15'
 

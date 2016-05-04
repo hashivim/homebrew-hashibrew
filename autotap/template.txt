@@ -1,5 +1,5 @@
 class ${ruby_class} < Formula
-  description '${description}'
+  desc '${desc}'
   homepage '${homepage}'
   version '${version}'
 

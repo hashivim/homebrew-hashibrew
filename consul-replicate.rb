@@ -1,5 +1,5 @@
 class ConsulReplicate < Formula
-  description 'Consul cross-DC KV replication daemon'
+  desc 'Consul cross-DC KV replication daemon'
   homepage 'https://github.com/hashicorp/consul-replicate'
   version '0.2.0'
 

@@ -1,5 +1,5 @@
 class Serf < Formula
-  description 'Service orchestration and management tool'
+  desc 'Service orchestration and management tool'
   homepage 'https://www.serfdom.io'
   version '0.7.0'
 

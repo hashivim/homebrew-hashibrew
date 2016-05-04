@@ -1,5 +1,5 @@
 class ConsulTemplate < Formula
-  description 'Generic template rendering and notifications with Consul'
+  desc 'Generic template rendering and notifications with Consul'
   homepage 'https://github.com/hashicorp/consul-template'
   version '0.14.0'
 

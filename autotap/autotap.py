@@ -80,7 +80,7 @@ def create_formula(product):
         template = string.Template(f.read())
     with open(formula_path(product), 'w') as f:
         f.write(template.substitute({
-            'description': product['description'],
+            'desc': product['desc'],
             'homepage': product['homepage'],
             'name': product['name'],
             'ruby_class': ruby_classify(product),
@@ -99,7 +99,7 @@ def generate_formulas():
         f = urlopen(url)
         parser.feed(f.read().decode('utf-8'))
         create_formula({
-            'description': products.get(section, 'description'),
+            'desc': products.get(section, 'desc'),
             'homepage': products.get(section, 'homepage'),
             'name': parser.name,
             'version': parser.version
@@ -107,12 +107,13 @@ def generate_formulas():
 
 
 def git_commit():
-    """Commit modified formulas to Git."""
+    """Commit modified names to Git."""
     git_status = subprocess.check_output(
         ['git', 'status', '--porcelain']
     ).decode('utf-8').split('\n')
     modified = [l for l in git_status if re.search(r'^ M .*\.rb$', l)]
-    for formula in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
+    for name in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
+        formula = {'name': name}
         with open(formula_path(formula)) as f:
             formula_file = f.read().split('\n')
         vl = [l for l in formula_file if re.match('^  version', l)][0]
@@ -122,7 +123,7 @@ def git_commit():
             'commit',
             formula_path(formula),
             '-m'
-            '%s %s' % (formula, version)
+            '%s %s' % (name, version)
         ])
 
 
