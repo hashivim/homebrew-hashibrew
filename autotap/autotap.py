@@ -107,7 +107,7 @@ def generate_formulas():
 
 
 def git_commit():
-    """Commit modified names to Git."""
+    """Commit modified formulas to Git."""
     git_status = subprocess.check_output(
         ['git', 'status', '--porcelain']
     ).decode('utf-8').split('\n')
