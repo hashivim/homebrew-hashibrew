@@ -51,7 +51,7 @@ def formula_path(product):
     )
 
 
-def sha256sum(product):
+def sha256(product):
     """Get the SHA256 sum for a product."""
     url = 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
         product['name'],
@@ -65,8 +65,18 @@ def sha256sum(product):
     return line.split()[0]
 
 
-def ruby_classify(product):
-    """Convert a product name to a Ruby class name."""
+def url(product):
+    """Get the releases.hashicorp.com URL for a product."""
+    return 'https://releases.hashicorp.com/%s/%s/%s_%s_darwin_amd64.zip' % (
+        product['name'],
+        product['version'],
+        product['name'],
+        product['version']
+    )
+
+
+def class_name(product):
+    """Get the Ruby class name for a product."""
     return "".join(i.title() for i in product['name'].split('-'))
 
 
@@ -79,8 +89,9 @@ def create_formula(product):
             'desc': product['desc'],
             'homepage': product['homepage'],
             'name': product['name'],
-            'ruby_class': ruby_classify(product),
-            'sha256sum': sha256sum(product),
+            'class_name': class_name(product),
+            'sha256': sha256(product),
+            'url': url(product),
             'version': product['version']
         }))
 

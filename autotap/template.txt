@@ -1,10 +1,10 @@
-class ${ruby_class} < Formula
+class ${class_name} < Formula
   desc '${desc}'
   homepage '${homepage}'
   version '${version}'
 
-  url 'https://releases.hashicorp.com/${name}/${version}/${name}_${version}_darwin_amd64.zip'
-  sha256 '${sha256sum}'
+  url '${url}'
+  sha256 '${sha256}'
 
   depends_on :arch => :x86_64
 
