@@ -1,10 +1,10 @@
 class Packer < Formula
   desc 'A tool for creating identical machine images for multiple platforms from a single source configuration'
   homepage 'https://www.packer.io'
-  version '0.10.0'
+  version '0.10.1'
 
-  url 'https://releases.hashicorp.com/packer/0.10.0/packer_0.10.0_darwin_amd64.zip'
-  sha256 'cb1d9768306466d566abc79d83911983ace6a9a6c0a6657dc7eaab03cabd2e21'
+  url 'https://releases.hashicorp.com/packer/0.10.1/packer_0.10.1_darwin_amd64.zip'
+  sha256 'fac621bf1fb43f0cbbe52481c8dfda2948895ad52e022e46f00bc75c07a4f181'
 
   depends_on :arch => :x86_64
 
