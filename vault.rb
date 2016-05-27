@@ -1,10 +1,10 @@
 class Vault < Formula
   desc 'A tool for managing secrets'
   homepage 'https://www.vaultproject.io'
-  version '0.5.2'
+  version '0.5.3'
 
-  url 'https://releases.hashicorp.com/vault/0.5.2/vault_0.5.2_darwin_amd64.zip'
-  sha256 '48bf1d66cc3b81293186fd458f63fc2b02344aec5f1490c9b9a2915831c13d33'
+  url 'https://releases.hashicorp.com/vault/0.5.3/vault_0.5.3_darwin_amd64.zip'
+  sha256 '31e7eff07c202cf2166ac63457054da59a1f4f49e7ad079b38316efadbb79e32'
 
   depends_on :arch => :x86_64
 
