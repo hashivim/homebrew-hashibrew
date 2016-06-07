@@ -35,6 +35,11 @@ need to install them with the `markcornick/rogue` prefix, thus:
 
     brew install markcornick/rogue/terraform
 
+Hashicorp often releases -rc versions before major updates. When
+available, these can be installed thus:
+
+    brew install --devel markcornick/rogue/terraform
+
 ## Maintaining This Tap
 
 Maintenance of this tap is entirely automated with the `autotap.py`
