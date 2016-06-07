@@ -32,14 +32,19 @@ class HashicorpReleasesParser(html_parser.HTMLParser):
     def __init__(self):
         """Initialize the parser."""
         html_parser.HTMLParser.__init__(self)
-        self.version = '0.0.0'
+        self.stable_version = '0.0.0'
+        self.devel_version = '0.0.0'
 
     def handle_data(self, data):
         """Look for version strings."""
         if re.search(r'_\d+\.\d+\.\d+$', data):
-            this_version = data.split('_')[1]
-            if Version(this_version) > Version(self.version):
-                self.version = this_version
+            this_stable_version = data.split('_')[1]
+            if Version(this_stable_version) > Version(self.stable_version):
+                self.stable_version = this_stable_version
+        if re.search(r'_\d+\.\d+\.\d+-rc\d$', data):
+            this_devel_version = data.split('_')[1]
+            if Version(this_devel_version) > Version(self.devel_version):
+                self.devel_version = this_devel_version
 
 
 def formula_path(product):
@@ -51,13 +56,17 @@ def formula_path(product):
     )
 
 
-def sha256(product):
+def sha256(product, devel=False):
     """Get the SHA256 sum for a product."""
+    if devel:
+        version = product['devel_version']
+    else:
+        version = product['stable_version']
     url = 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
         product['name'],
-        product['version'],
+        version,
         product['name'],
-        product['version']
+        version
     )
     f = urlopen(url)
     sha256sums = f.read().decode('utf-8').split('\n')
@@ -65,13 +74,17 @@ def sha256(product):
     return line.split()[0]
 
 
-def url(product):
-    """Get the releases.hashicorp.com URL for a product."""
+def url(product, devel=False):
+    """Get the URL for a product."""
+    if devel:
+        version = product['devel_version']
+    else:
+        version = product['stable_version']
     return 'https://releases.hashicorp.com/%s/%s/%s_%s_darwin_amd64.zip' % (
         product['name'],
-        product['version'],
+        version,
         product['name'],
-        product['version']
+        version
     )
 
 
@@ -82,18 +95,35 @@ def class_name(product):
 
 def create_formula(product):
     """Write a formula file."""
-    with open(os.path.join(os.path.dirname(__file__), 'template.txt')) as f:
-        template = Template(f.read())
-    with open(formula_path(product), 'w') as f:
-        f.write(template.substitute({
-            'desc': product['desc'],
-            'homepage': product['homepage'],
-            'name': product['name'],
-            'class_name': class_name(product),
-            'sha256': sha256(product),
-            'url': url(product),
-            'version': product['version']
-        }))
+    if Version(product['devel_version']) > Version(product['stable_version']):
+        with open(os.path.join(os.path.dirname(__file__), 'devel.txt')) as f:
+            template = Template(f.read())
+        with open(formula_path(product), 'w') as f:
+            f.write(template.substitute({
+                'desc': product['desc'],
+                'homepage': product['homepage'],
+                'name': product['name'],
+                'class_name': class_name(product),
+                'stable_sha256': sha256(product),
+                'stable_url': url(product),
+                'stable_version': product['stable_version'],
+                'devel_sha256': sha256(product, True),
+                'devel_url': url(product, True),
+                'devel_version': product['devel_version'],
+            }))
+    else:
+        with open(os.path.join(os.path.dirname(__file__), 'stable.txt')) as f:
+            template = Template(f.read())
+        with open(formula_path(product), 'w') as f:
+            f.write(template.substitute({
+                'desc': product['desc'],
+                'homepage': product['homepage'],
+                'name': product['name'],
+                'class_name': class_name(product),
+                'stable_sha256': sha256(product),
+                'stable_url': url(product),
+                'stable_version': product['stable_version']
+            }))
 
 
 def generate_formulas():
@@ -109,7 +139,8 @@ def generate_formulas():
             'desc': products.get(section, 'desc'),
             'homepage': products.get(section, 'homepage'),
             'name': section,
-            'version': parser.version
+            'stable_version': parser.stable_version,
+            'devel_version': parser.devel_version
         })
 
 
@@ -123,8 +154,8 @@ def git_commit():
         formula = {'name': name}
         with open(formula_path(formula)) as f:
             formula_file = f.read().split('\n')
-        vl = [l for l in formula_file if re.match('^  version', l)][0]
-        version = vl.split("'")[1]
+        vl = [l for l in formula_file if re.match('^(  )?  version', l)]
+        version = sorted(vl, reverse=True)[0].split("'")[1]
         subprocess.call([
             'git',
             'commit',

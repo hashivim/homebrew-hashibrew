@@ -1,0 +1,18 @@
+class ${class_name} < Formula
+  desc '${desc}'
+  homepage '${homepage}'
+  depends_on :arch => :x86_64
+  stable do
+    url '${stable_url}'
+    sha256 '${stable_sha256}'
+    version '${stable_version}'
+  end
+  devel do
+    url '${devel_url}'
+    sha256 '${devel_sha256}'
+    version '${devel_version}'
+  end
+  def install
+    bin.install Dir['*']
+  end
+end

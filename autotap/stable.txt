@@ -1,13 +1,10 @@
 class ${class_name} < Formula
   desc '${desc}'
   homepage '${homepage}'
-  version '${version}'
-
-  url '${url}'
-  sha256 '${sha256}'
-
   depends_on :arch => :x86_64
-
+  url '${stable_url}'
+  sha256 '${stable_sha256}'
+  version '${stable_version}'
   def install
     bin.install Dir['*']
   end
