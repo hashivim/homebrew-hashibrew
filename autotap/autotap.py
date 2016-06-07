@@ -23,7 +23,7 @@ from semantic_version import Version
 from six.moves import configparser
 from six.moves import html_parser
 from six.moves.urllib.request import urlopen
-from string import Template
+import string
 
 
 class HashicorpReleasesParser(html_parser.HTMLParser):
@@ -41,10 +41,12 @@ class HashicorpReleasesParser(html_parser.HTMLParser):
             this_stable_version = data.split('_')[1]
             if Version(this_stable_version) > Version(self.stable_version):
                 self.stable_version = this_stable_version
-        if re.search(r'_\d+\.\d+\.\d+-rc\d$', data):
+        elif re.search(r'_\d+\.\d+\.\d+-rc\d$', data):
             this_devel_version = data.split('_')[1]
             if Version(this_devel_version) > Version(self.devel_version):
                 self.devel_version = this_devel_version
+        else:
+            pass
 
 
 def formula_path(product):
@@ -95,35 +97,26 @@ def class_name(product):
 
 def create_formula(product):
     """Write a formula file."""
+    variables = {
+        'desc': product['desc'],
+        'homepage': product['homepage'],
+        'name': product['name'],
+        'class_name': class_name(product),
+        'stable_sha256': sha256(product),
+        'stable_url': url(product),
+        'stable_version': product['stable_version']
+    }
     if Version(product['devel_version']) > Version(product['stable_version']):
-        with open(os.path.join(os.path.dirname(__file__), 'devel.txt')) as f:
-            template = Template(f.read())
-        with open(formula_path(product), 'w') as f:
-            f.write(template.substitute({
-                'desc': product['desc'],
-                'homepage': product['homepage'],
-                'name': product['name'],
-                'class_name': class_name(product),
-                'stable_sha256': sha256(product),
-                'stable_url': url(product),
-                'stable_version': product['stable_version'],
-                'devel_sha256': sha256(product, True),
-                'devel_url': url(product, True),
-                'devel_version': product['devel_version'],
-            }))
+        template_file = 'devel.txt'
+        variables['devel_sha256'] = sha256(product, True)
+        variables['devel_url'] = url(product, True)
+        variables['devel_version'] = product['devel_version']
     else:
-        with open(os.path.join(os.path.dirname(__file__), 'stable.txt')) as f:
-            template = Template(f.read())
-        with open(formula_path(product), 'w') as f:
-            f.write(template.substitute({
-                'desc': product['desc'],
-                'homepage': product['homepage'],
-                'name': product['name'],
-                'class_name': class_name(product),
-                'stable_sha256': sha256(product),
-                'stable_url': url(product),
-                'stable_version': product['stable_version']
-            }))
+        template_file = 'stable.txt'
+    with open(os.path.join(os.path.dirname(__file__), template_file)) as f:
+        template = string.Template(f.read())
+    with open(formula_path(product), 'w') as f:
+        f.write(template.substitute(variables))
 
 
 def generate_formulas():
