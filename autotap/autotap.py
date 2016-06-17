@@ -23,7 +23,7 @@ from semantic_version import Version
 from six.moves import configparser
 from six.moves import html_parser
 from six.moves.urllib.request import urlopen
-import string
+from jinja2 import Environment, FileSystemLoader
 
 
 class HashicorpReleasesParser(html_parser.HTMLParser):
@@ -107,16 +107,18 @@ def create_formula(product):
         'stable_version': product['stable_version']
     }
     if Version(product['devel_version']) > Version(product['stable_version']):
-        template_file = 'devel.txt'
         variables['devel_sha256'] = sha256(product, True)
         variables['devel_url'] = url(product, True)
         variables['devel_version'] = product['devel_version']
     else:
-        template_file = 'stable.txt'
-    with open(os.path.join(os.path.dirname(__file__), template_file)) as f:
-        template = string.Template(f.read())
+        variables['devel_version'] = None
+    env = Environment(
+        keep_trailing_newline=True,
+        loader=FileSystemLoader('.')
+    )
+    template = env.get_template('template.txt')
     with open(formula_path(product), 'w') as f:
-        f.write(template.substitute(variables))
+        f.write(template.render(variables))
 
 
 def generate_formulas():
