@@ -32,131 +32,147 @@ class HashicorpReleasesParser(HTMLParser):
     def __init__(self):
         """Initialize the parser."""
         HTMLParser.__init__(self)
-        self.stable_version = '0.0.0'
-        self.devel_version = '0.0.0'
+        self.stable_version = Version('0.0.0')
+        self.devel_version = Version('0.0.0')
 
     def handle_data(self, data):
         """Look for version strings."""
         if re.search(r'_\d+\.\d+\.\d+$', data):
-            this_stable_version = data.split('_')[1]
-            if Version(this_stable_version) > Version(self.stable_version):
+            this_stable_version = Version(data.split('_')[1])
+            if this_stable_version > self.stable_version:
                 self.stable_version = this_stable_version
         elif re.search(r'_\d+\.\d+\.\d+-rc\d$', data):
-            this_devel_version = data.split('_')[1]
-            if Version(this_devel_version) > Version(self.devel_version):
+            this_devel_version = Version(data.split('_')[1])
+            if this_devel_version > self.devel_version:
                 self.devel_version = this_devel_version
         else:
             pass
 
 
-def formula_path(product):
-    """Get the path to a product's formula file."""
-    return os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '%s.rb' % product['name']
-    )
-
-
-def sha256(product, devel=False):
-    """Get the SHA256 sum for a product."""
-    if devel:
-        version = product['devel_version']
-    else:
-        version = product['stable_version']
-    url = 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
-        product['name'],
-        version,
-        product['name'],
-        version
-    )
-    f = urlopen(url)
-    sha256sums = f.read().decode('utf-8').split('\n')
-    line = [l for l in sha256sums if re.search('darwin_amd64', l)][0]
-    return line.split()[0]
-
-
-def url(product, devel=False):
+def product_url(name, version):
     """Get the URL for a product."""
-    if devel:
-        version = product['devel_version']
-    else:
-        version = product['stable_version']
     return 'https://releases.hashicorp.com/%s/%s/%s_%s_darwin_amd64.zip' % (
-        product['name'],
+        name,
         version,
-        product['name'],
+        name,
         version
     )
 
 
-def class_name(product):
-    """Get the Ruby class name for a product."""
-    return "".join(i.title() for i in product['name'].split('-'))
-
-
-def create_formula(product):
-    """Write a formula file."""
-    product['class_name'] = class_name(product)
-    product['stable_sha256'] = sha256(product)
-    product['stable_url'] = url(product)
-    if Version(product['devel_version']) > Version(product['stable_version']):
-        product['devel_sha256'] = sha256(product, True)
-        product['devel_url'] = url(product, True)
-    else:
-        product['devel_version'] = None
-    env = Environment(
-        keep_trailing_newline=True,
-        loader=FileSystemLoader('.')
+def shasum_url(name, version):
+    """Get the URL for a product's SHA256 sums."""
+    return 'https://releases.hashicorp.com/%s/%s/%s_%s_SHA256SUMS' % (
+        name,
+        version,
+        name,
+        version
     )
-    template = env.get_template('template.txt')
-    with open(formula_path(product), 'w') as f:
-        f.write(template.render(product))
 
 
-def generate_formulas():
-    """Generate the complete set of formulas."""
-    products = ConfigParser()
-    products.read(os.path.join(os.path.dirname(__file__), 'products.ini'))
-    for section in products.sections():
-        url = 'https://releases.hashicorp.com/%s/' % section
-        parser = HashicorpReleasesParser()
-        f = urlopen(url)
-        parser.feed(f.read().decode('utf-8'))
-        create_formula({
-            'desc': products.get(section, 'desc'),
-            'homepage': products.get(section, 'homepage'),
-            'name': section,
-            'stable_version': parser.stable_version,
-            'devel_version': parser.devel_version
-        })
+class Formula:
+    """A formula for a Hashicorp product."""
 
+    def __init__(self, options):
+        """The constructor."""
+        self.name = options['name']
+        self.desc = options['desc']
+        self.homepage = options['homepage']
+        self.stable_version = options['stable_version']
+        self.devel_version = options['devel_version']
 
-def git_commit():
-    """Commit modified formulas to Git."""
-    git_status = subprocess.check_output(
-        ['git', 'status', '--porcelain']
-    ).decode('utf-8').split('\n')
-    modified = [l for l in git_status if re.search(r'^ M .*\.rb$', l)]
-    for name in [l.split(' M ')[1].replace('.rb', '') for l in modified]:
-        formula = {'name': name}
-        with open(formula_path(formula)) as f:
+    def path(self):
+        """The path to the formula file."""
+        return os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '%s.rb' % self.name
+        )
+
+    def stable_sha256(self):
+        """The stable SHA256 sum for this formula."""
+        f = urlopen(shasum_url(self.name, self.stable_version))
+        sha256sums = f.read().decode('utf-8').split('\n')
+        line = [l for l in sha256sums if re.search('darwin_amd64', l)][0]
+        return line.split()[0]
+
+    def devel_sha256(self):
+        """The devel SHA256 sum for this formula."""
+        if self.has_devel():
+            f = urlopen(shasum_url(self.name, self.devel_version))
+            sha256sums = f.read().decode('utf-8').split('\n')
+            line = [l for l in sha256sums if re.search('darwin_amd64', l)][0]
+            return line.split()[0]
+        else:
+            pass
+
+    def stable_url(self):
+        """The stable URL for this formula."""
+        return product_url(self.name, self.stable_version)
+
+    def devel_url(self):
+        """The devel URL for this formula."""
+        return product_url(self.name, self.devel_version)
+
+    def class_name(self):
+        """The Ruby class name for this formula."""
+        return "".join(i.title() for i in self.name.split('-'))
+
+    def has_devel(self):
+        """Does this formula have a devel version?"""
+        return self.devel_version > self.stable_version
+
+    def write(self):
+        """Write this formula."""
+        env = Environment(
+            keep_trailing_newline=True,
+            loader=FileSystemLoader('.')
+        )
+        template = env.get_template('template.txt')
+        with open(self.path(), 'w') as f:
+            f.write(template.render(product=self))
+
+    def modified(self):
+        """Has this formula been modified?"""
+        git_status = subprocess.check_output(
+            ['git', 'status', '--porcelain', self.path()]
+        ).decode('utf-8').split('\n')
+        return len([l for l in git_status if l != '']) > 0
+
+    def git_commit(self):
+        """Commit the formula to Git."""
+        with open(self.path()) as f:
             formula_file = f.read().split('\n')
         vl = [l for l in formula_file if re.match('^(  )?  version', l)]
         version = sorted(vl, reverse=True)[0].split("'")[1]
         subprocess.call([
             'git',
             'commit',
-            formula_path(formula),
+            self.path(),
             '-m'
-            '%s %s' % (name, version)
+            '%s %s' % (self.name, version)
         ])
 
 
 def main():
-    """Pull it all together."""
-    generate_formulas()
-    git_commit()
+    """Generate the complete set of formulas."""
+    products = ConfigParser()
+    products.read(os.path.join(os.path.dirname(__file__), 'products.ini'))
+    for product in products.sections():
+        url = 'https://releases.hashicorp.com/%s/' % product
+        parser = HashicorpReleasesParser()
+        f = urlopen(url)
+        parser.feed(f.read().decode('utf-8'))
+        formula = Formula({
+            'desc': products.get(product, 'desc'),
+            'homepage': products.get(product, 'homepage'),
+            'name': product,
+            'stable_version': parser.stable_version,
+            'devel_version': parser.devel_version
+        })
+        formula.write()
+        if formula.modified():
+            formula.git_commit()
+
 
 if __name__ == '__main__':
     main()
