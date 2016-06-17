@@ -97,28 +97,21 @@ def class_name(product):
 
 def create_formula(product):
     """Write a formula file."""
-    variables = {
-        'desc': product['desc'],
-        'homepage': product['homepage'],
-        'name': product['name'],
-        'class_name': class_name(product),
-        'stable_sha256': sha256(product),
-        'stable_url': url(product),
-        'stable_version': product['stable_version']
-    }
+    product['class_name'] = class_name(product)
+    product['stable_sha256'] = sha256(product)
+    product['stable_url'] = url(product)
     if Version(product['devel_version']) > Version(product['stable_version']):
-        variables['devel_sha256'] = sha256(product, True)
-        variables['devel_url'] = url(product, True)
-        variables['devel_version'] = product['devel_version']
+        product['devel_sha256'] = sha256(product, True)
+        product['devel_url'] = url(product, True)
     else:
-        variables['devel_version'] = None
+        product['devel_version'] = None
     env = Environment(
         keep_trailing_newline=True,
         loader=FileSystemLoader('.')
     )
     template = env.get_template('template.txt')
     with open(formula_path(product), 'w') as f:
-        f.write(template.render(variables))
+        f.write(template.render(product))
 
 
 def generate_formulas():
