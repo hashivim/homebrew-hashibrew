@@ -19,19 +19,19 @@
 import os.path
 import re
 import subprocess
-from semantic_version import Version
-from six.moves import configparser
-from six.moves import html_parser
-from six.moves.urllib.request import urlopen
+from ConfigParser import ConfigParser
+from HTMLParser import HTMLParser
 from jinja2 import Environment, FileSystemLoader
+from semantic_version import Version
+from urllib2 import urlopen
 
 
-class HashicorpReleasesParser(html_parser.HTMLParser):
+class HashicorpReleasesParser(HTMLParser):
     """Parse a releases.hashicorp.com page."""
 
     def __init__(self):
         """Initialize the parser."""
-        html_parser.HTMLParser.__init__(self)
+        HTMLParser.__init__(self)
         self.stable_version = '0.0.0'
         self.devel_version = '0.0.0'
 
@@ -116,7 +116,7 @@ def create_formula(product):
 
 def generate_formulas():
     """Generate the complete set of formulas."""
-    products = configparser.ConfigParser()
+    products = ConfigParser()
     products.read(os.path.join(os.path.dirname(__file__), 'products.ini'))
     for section in products.sections():
         url = 'https://releases.hashicorp.com/%s/' % section
