@@ -2,7 +2,11 @@ class {{ class_name }} < Formula
   desc '{{ desc }}'
   homepage '{{ homepage }}'
   depends_on :arch => :x86_64
-  {% if devel_version != None -%}
+  {% if devel_version == None -%}
+  url '{{ stable_url }}'
+  sha256 '{{ stable_sha256 }}'
+  version '{{ stable_version }}'
+  {% else -%}
   stable do
     url '{{ stable_url }}'
     sha256 '{{ stable_sha256 }}'
@@ -13,10 +17,6 @@ class {{ class_name }} < Formula
     sha256 '{{ devel_sha256 }}'
     version '{{ devel_version }}'
   end
-  {% else -%}
-  url '{{ stable_url }}'
-  sha256 '{{ stable_sha256 }}'
-  version '{{ stable_version }}'
   {% endif -%}
   def install
     bin.install Dir['*']
