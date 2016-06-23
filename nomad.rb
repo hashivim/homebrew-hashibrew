@@ -8,9 +8,9 @@ class Nomad < Formula
     version '0.3.2'
   end
   devel do
-    url 'https://releases.hashicorp.com/nomad/0.4.0-rc1/nomad_0.4.0-rc1_darwin_amd64.zip'
-    sha256 '7dc8779a5821cf98667f7c4b93d5d7d5c3ac64c10631c2e4dd77cb79a6d9f139'
-    version '0.4.0-rc1'
+    url 'https://releases.hashicorp.com/nomad/0.4.0-rc2/nomad_0.4.0-rc2_darwin_amd64.zip'
+    sha256 '897f6c9c05b8cdfe4e7e03e31fd46b8cf0baed4a2b317e6cdfadeb8f500e234f'
+    version '0.4.0-rc2'
   end
   def install
     bin.install Dir['*']
