@@ -64,14 +64,14 @@ class Formula:
         self.devel_version = parser.devel_version
 
     def hashicorp_url(self, version):
-        """Get the hashicorp.com namespace for this formula."""
+        """The hashicorp.com namespace for this formula."""
         return 'https://releases.hashicorp.com/%s/%s' % (
             self.name,
             version
         )
 
     def product_url(self, version):
-        """Get the URL for this formula."""
+        """The URL for this formula."""
         return '%s/%s_%s_darwin_amd64.zip' % (
             self.hashicorp_url(version),
             self.name,
@@ -79,7 +79,7 @@ class Formula:
         )
 
     def shasum_url(self, version):
-        """Get the URL for this formula's SHA256 sums."""
+        """The URL for this formula's SHA256 sums."""
         return '%s/%s_%s_SHA256SUMS' % (
             self.hashicorp_url(version),
             self.name,
@@ -109,7 +109,7 @@ class Formula:
         if self.has_devel():
             return self.find_sha256(self.devel_version)
         else:
-            pass
+            return None
 
     def stable_url(self):
         """The stable URL for this formula."""
@@ -117,7 +117,10 @@ class Formula:
 
     def devel_url(self):
         """The devel URL for this formula."""
-        return self.product_url(self.devel_version)
+        if self.has_devel():
+            return self.product_url(self.devel_version)
+        else:
+            return None
 
     def class_name(self):
         """The Ruby class name for this formula."""
