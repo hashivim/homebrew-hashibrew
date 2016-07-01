@@ -129,26 +129,32 @@ class Formula:
 
     def write(self):
         """Write this formula."""
-        env = Environment(
+        environment = Environment(
             keep_trailing_newline=True,
             loader=FileSystemLoader('.')
         )
-        template = env.get_template('template.txt')
+        template = environment.get_template('template.txt')
         with open(self.path(), 'w') as formula_file:
             formula_file.write(template.render(product=self))
 
-    def modified(self):
-        """Has this formula been modified?"""
+    def needs_commit(self):
+        """Is this formula modified or newly created?"""
         git_status = subprocess.check_output(
-            ['git', 'status', '--porcelain', self.path()]
+            ['git', 'status', '--porcelain', self.path()],
+            stderr=subprocess.STDOUT
         ).decode('utf-8').split('\n')
-        return len(git_status) > 1
+        new_formula = ['?? %s.rb' % self.name, '']
+        if git_status == new_formula:
+            subprocess.call(['git', 'add', self.path()])
+            return True
+        else:
+            return len(git_status) > 1
 
     def git_commit(self):
         """Commit the formula to Git."""
         with open(self.path(), 'r') as formula_file:
             contents = formula_file.read().split('\n')
-        versions = [l for l in contents if re.match('^(  )?  version', l)]
+        versions = [l for l in contents if re.match('^\s+version', l)]
         version = sorted(versions, reverse=True)[0].split("'")[1]
         subprocess.call([
             'git',
@@ -170,7 +176,7 @@ def main():
             'name': name
         })
         formula.write()
-        if formula.modified():
+        if formula.needs_commit():
             formula.git_commit()
 
 
