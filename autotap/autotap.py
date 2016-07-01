@@ -149,7 +149,7 @@ class Formula:
         else:
             return len(git_status) > 1
 
-    def git_commit(self):
+    def commit(self):
         """Commit the formula to Git."""
         with open(self.path(), 'r') as formula_file:
             contents = formula_file.read().split('\n')
@@ -176,7 +176,7 @@ def main():
         })
         formula.write()
         if formula.needs_commit():
-            formula.git_commit()
+            formula.commit()
 
 
 if __name__ == '__main__':
