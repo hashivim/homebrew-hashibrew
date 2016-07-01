@@ -57,6 +57,11 @@ class Formula:
         self.name = params['name']
         self.desc = params['desc']
         self.homepage = params['homepage']
+        self.path = os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '%s.rb' % self.name
+        )
         parser = HashicorpReleasesParser()
         stream = urlopen('https://releases.hashicorp.com/%s/' % self.name)
         parser.feed(stream.read().decode('utf-8'))
@@ -84,14 +89,6 @@ class Formula:
             self.hashicorp_url(version),
             self.name,
             version
-        )
-
-    def path(self):
-        """The path to the formula file."""
-        return os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '%s.rb' % self.name
         )
 
     def find_sha256(self, version):
@@ -137,31 +134,31 @@ class Formula:
             loader=FileSystemLoader('.')
         )
         template = environment.get_template('template.txt')
-        with open(self.path(), 'w') as formula_file:
+        with open(self.path, 'w') as formula_file:
             formula_file.write(template.render(product=self))
 
     def needs_commit(self):
         """Is this formula modified or newly created?"""
         git_status = subprocess.check_output(
-            ['git', 'status', '--porcelain', self.path()]
+            ['git', 'status', '--porcelain', self.path]
         ).decode('utf-8').split('\n')
         new_formula = ['?? %s.rb' % self.name, '']
         if git_status == new_formula:
-            subprocess.call(['git', 'add', self.path()])
+            subprocess.call(['git', 'add', self.path])
             return True
         else:
             return len(git_status) > 1
 
     def commit(self):
         """Commit the formula to Git."""
-        with open(self.path(), 'r') as formula_file:
+        with open(self.path, 'r') as formula_file:
             contents = formula_file.read().split('\n')
         versions = [l for l in contents if re.match('^\s+version', l)]
         version = sorted(versions, reverse=True)[0].split("'")[1]
         subprocess.call([
             'git',
             'commit',
-            self.path(),
+            self.path,
             '-m'
             '%s %s' % (self.name, version)
         ])
