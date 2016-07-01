@@ -70,9 +70,11 @@ class Formula:
         self.devel_version = parser.devel_version
         self.stable_url = self.product_url(self.stable_version)
         self.stable_sha256 = self.find_sha256(self.stable_version)
-        if self.has_devel():
+        if self.devel_version > self.stable_version:
             self.devel_url = self.product_url(self.devel_version)
             self.devel_sha256 = self.find_sha256(self.devel_version)
+        else:
+            self.devel_version = None
 
     def hashicorp_url(self, version):
         """The hashicorp.com namespace for this formula."""
@@ -103,10 +105,6 @@ class Formula:
         sha256sums = stream.read().decode('utf-8').split('\n')
         line = [l for l in sha256sums if re.search('darwin_amd64', l)][0]
         return line.split()[0]
-
-    def has_devel(self):
-        """Does this formula have a devel version?"""
-        return self.devel_version > self.stable_version
 
     def write(self):
         """Write this formula."""

@@ -7,7 +7,7 @@ class {{ product.class_name }} < Formula
     sha256 '{{ product.stable_sha256 }}'
     version '{{ product.stable_version  }}'
   end
-  {% if product.has_devel() -%}
+  {% if product.devel_version -%}
   devel do
     url '{{ product.devel_url }}'
     sha256 '{{ product.devel_sha256 }}'
