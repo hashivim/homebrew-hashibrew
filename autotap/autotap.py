@@ -62,11 +62,17 @@ class Formula:
             '..',
             '%s.rb' % self.name
         )
+        self.class_name = "".join(i.title() for i in self.name.split('-'))
         parser = HashicorpReleasesParser()
         stream = urlopen('https://releases.hashicorp.com/%s/' % self.name)
         parser.feed(stream.read().decode('utf-8'))
         self.stable_version = parser.stable_version
         self.devel_version = parser.devel_version
+        self.stable_url = self.product_url(self.stable_version)
+        self.stable_sha256 = self.find_sha256(self.stable_version)
+        if self.has_devel():
+            self.devel_url = self.product_url(self.devel_version)
+            self.devel_sha256 = self.find_sha256(self.devel_version)
 
     def hashicorp_url(self, version):
         """The hashicorp.com namespace for this formula."""
@@ -97,31 +103,6 @@ class Formula:
         sha256sums = stream.read().decode('utf-8').split('\n')
         line = [l for l in sha256sums if re.search('darwin_amd64', l)][0]
         return line.split()[0]
-
-    def stable_sha256(self):
-        return self.find_sha256(self.stable_version)
-
-    def devel_sha256(self):
-        """The devel SHA256 sum for this formula."""
-        if self.has_devel():
-            return self.find_sha256(self.devel_version)
-        else:
-            return None
-
-    def stable_url(self):
-        """The stable URL for this formula."""
-        return self.product_url(self.stable_version)
-
-    def devel_url(self):
-        """The devel URL for this formula."""
-        if self.has_devel():
-            return self.product_url(self.devel_version)
-        else:
-            return None
-
-    def class_name(self):
-        """The Ruby class name for this formula."""
-        return "".join(i.title() for i in self.name.split('-'))
 
     def has_devel(self):
         """Does this formula have a devel version?"""
