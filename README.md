@@ -18,27 +18,27 @@ and keeping these products up-to-date is pretty disappointing:
     non-existent, which makes this no better than using the
     binaries directly.
 
-This tap (named "rogue" for historical reasons) lets you use the official
-binaries with the core, non-Cask Homebrew system. It includes all of the
-core Hashicorp tools except for Vagrant (which is distributed as a DMG
-file) as well as some additional tools.
+This tap lets you use the official binaries with the core, non-Cask
+Homebrew system. It includes all of the core Hashicorp tools (except for
+Vagrant, which is distributed as a DMG file) as well as some additional
+tools.
 
 ## Using This Tap
 
 First tap the repo.
 
-    brew tap markcornick/rogue
+    brew tap hashivim/hashibrew
 
 Almost all of these formulas (c'mon, "formulae" is silly, we're not
 speaking Latin here) conflict with ones in Homebrew mainline, so you'll
-need to install them with the `markcornick/rogue` prefix, thus:
+need to install them with the `hashivim/hashibrew` prefix, thus:
 
-    brew install markcornick/rogue/terraform
+    brew install hashivim/hashibrew/terraform
 
 Hashicorp often releases -rc versions before major updates. When
 available, these can be installed thus:
 
-    brew install --devel markcornick/rogue/terraform
+    brew install --devel hashivim/hashibrew/terraform
 
 ## Maintaining This Tap
 
@@ -70,8 +70,3 @@ it as needed.
 Issues regarding the Hashicorp products should be directed to Hashicorp.
 Issues regarding Homebrew should be directed to Homebrew. Remember, this
 tap is not affiliated with or endorsed by either Hashicorp or Homebrew.
-
-## Future Plans
-
-If it can be done without messing up everyone's Homebrew setups, this
-tap could/should be renamed from "rogue" to something else.
