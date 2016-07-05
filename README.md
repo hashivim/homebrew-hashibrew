@@ -1,4 +1,4 @@
-# Unofficial Hashcorp Homebrew Tap
+# Unofficial Hashicorp Homebrew Tap
 
 _This is an unofficial tap, not affiliated with or endorsed by either
 Hashicorp or Homebrew._
