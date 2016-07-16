@@ -8,9 +8,9 @@ class Terraform < Formula
     version '0.6.16'
   end
   devel do
-    url 'https://releases.hashicorp.com/terraform/0.7.0-rc2/terraform_0.7.0-rc2_darwin_amd64.zip'
-    sha256 'ade28697e57abd2b8a5dd35144bfbef946e2503362c3613340cff8ff7a99365b'
-    version '0.7.0-rc2'
+    url 'https://releases.hashicorp.com/terraform/0.7.0-rc3/terraform_0.7.0-rc3_darwin_amd64.zip'
+    sha256 '2d34cf930f7ea7c983b3778645a00ad81612911b831525a438528b493b0e37b1'
+    version '0.7.0-rc3'
   end
   def install
     bin.install Dir['*']
