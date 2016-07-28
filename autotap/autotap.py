@@ -41,7 +41,7 @@ class HashicorpReleasesParser(HTMLParser):
             this_stable_version = Version(data.split('_')[1])
             if this_stable_version > self.stable_version:
                 self.stable_version = this_stable_version
-        elif re.search(r'_\d+\.\d+\.\d+-rc\d$', data):
+        elif re.search(r'_\d+\.\d+\.\d+-rc\d+$', data):
             this_devel_version = Version(data.split('_')[1])
             if this_devel_version > self.devel_version:
                 self.devel_version = this_devel_version
