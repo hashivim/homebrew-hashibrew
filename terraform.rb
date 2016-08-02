@@ -3,14 +3,9 @@ class Terraform < Formula
   homepage 'https://www.terraform.io'
   depends_on :arch => :x86_64
   stable do
-    url 'https://releases.hashicorp.com/terraform/0.6.16/terraform_0.6.16_darwin_amd64.zip'
-    sha256 '23feb79263126877e6128a03c600cd626f6691a118a474694c5ad45cc5da9366'
-    version '0.6.16'
-  end
-  devel do
-    url 'https://releases.hashicorp.com/terraform/0.7.0-rc3/terraform_0.7.0-rc3_darwin_amd64.zip'
-    sha256 '2d34cf930f7ea7c983b3778645a00ad81612911b831525a438528b493b0e37b1'
-    version '0.7.0-rc3'
+    url 'https://releases.hashicorp.com/terraform/0.7.0/terraform_0.7.0_darwin_amd64.zip'
+    sha256 '4720e4b2878b3b0d3d781f68ff363707ed42fe39cb89e2e34c6c11f8e0f76b04'
+    version '0.7.0'
   end
   def install
     bin.install Dir['*']
