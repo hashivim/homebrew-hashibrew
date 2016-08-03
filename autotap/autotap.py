@@ -141,6 +141,7 @@ class Formula:
             '-m'
             '%s %s' % (self.name, version)
         ])
+        subprocess.call(['git', 'push', 'origin', 'master'])
 
 
 def main():
