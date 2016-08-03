@@ -54,14 +54,12 @@ class Formula:
 
     def __init__(self, params):
         """Construct a formula."""
+        self.autotap = os.path.dirname(__file__)
+        self.repository = os.path.join(self.autotap, '..')
         self.name = params['name']
         self.desc = params['desc']
         self.homepage = params['homepage']
-        self.path = os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '%s.rb' % self.name
-        )
+        self.path = os.path.join(self.repository, '%s.rb' % self.name)
         self.class_name = "".join(i.title() for i in self.name.split('-'))
         parser = HashicorpReleasesParser()
         stream = urlopen('https://releases.hashicorp.com/%s/' % self.name)
@@ -110,7 +108,7 @@ class Formula:
         """Write this formula."""
         environment = Environment(
             keep_trailing_newline=True,
-            loader=FileSystemLoader('.')
+            loader=FileSystemLoader(self.autotap)
         )
         template = environment.get_template('template.txt')
         with open(self.path, 'w') as formula_file:
@@ -119,7 +117,8 @@ class Formula:
     def needs_commit(self):
         """Is this formula modified or newly created?"""
         git_status = subprocess.check_output(
-            ['git', 'status', '--porcelain', self.path]
+            ['cd', self.repository, '&&',
+             'git', 'status', '--porcelain', self.path]
         ).decode('utf-8').split('\n')
         new_formula = ['?? %s.rb' % self.name, '']
         if git_status == new_formula:
@@ -135,13 +134,13 @@ class Formula:
         versions = [l for l in contents if re.match('^\s+version', l)]
         version = sorted(versions, reverse=True)[0].split("'")[1]
         subprocess.call([
-            'git',
-            'commit',
-            self.path,
-            '-m'
-            '%s %s' % (self.name, version)
+            'cd', self.repository, '&&',
+            'git', 'commit', self.path, '-m' '%s %s' % (self.name, version)
         ])
-        subprocess.call(['git', 'push', 'origin', 'master'])
+        subprocess.call([
+            'cd', self.repository, '&&',
+            'git', 'push', 'origin', 'master'
+        ])
 
 
 def main():
