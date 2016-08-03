@@ -2,11 +2,9 @@ class {{ product.class_name }} < Formula
   desc '{{ product.desc }}'
   homepage '{{ product.homepage }}'
   depends_on :arch => :x86_64
-  stable do
-    url '{{ product.stable_url }}'
-    sha256 '{{ product.stable_sha256 }}'
-    version '{{ product.stable_version  }}'
-  end
+  url '{{ product.stable_url }}'
+  sha256 '{{ product.stable_sha256 }}'
+  version '{{ product.stable_version  }}'
   {% if product.devel_version -%}
   devel do
     url '{{ product.devel_url }}'
