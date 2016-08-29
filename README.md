@@ -1,3 +1,9 @@
+# Maintainer Wanted
+
+This tap needs a more attentive maintainer. If you care about keeping
+this tap up to date and know enough Python to deal with autotap.py,
+please file an issue expressing interest. Thanks!
+
 # Unofficial Hashicorp Homebrew Tap
 
 _This is an unofficial tap, not affiliated with or endorsed by either
