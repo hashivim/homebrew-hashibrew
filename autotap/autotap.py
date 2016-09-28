@@ -116,10 +116,9 @@ class Formula:
 
     def needs_commit(self):
         """Is this formula modified or newly created?"""
-        git_status = subprocess.check_output(
-            ['cd', self.repository, '&&',
-             'git', 'status', '--porcelain', self.path]
-        ).decode('utf-8').split('\n')
+        git_status = subprocess.check_output([
+            'git', 'status', '--porcelain', self.path
+        ]).decode('utf-8').split('\n')
         new_formula = ['?? %s.rb' % self.name, '']
         if git_status == new_formula:
             subprocess.call(['git', 'add', self.path])
@@ -134,11 +133,9 @@ class Formula:
         versions = [l for l in contents if re.match('^\s+version', l)]
         version = sorted(versions, reverse=True)[0].split("'")[1]
         subprocess.call([
-            'cd', self.repository, '&&',
             'git', 'commit', self.path, '-m' '%s %s' % (self.name, version)
         ])
         subprocess.call([
-            'cd', self.repository, '&&',
             'git', 'push', 'origin', 'master'
         ])
 
