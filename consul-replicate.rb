@@ -2,9 +2,9 @@ class ConsulReplicate < Formula
   desc 'Consul cross-DC KV replication daemon'
   homepage 'https://github.com/hashicorp/consul-replicate'
   depends_on :arch => :x86_64
-  url 'https://releases.hashicorp.com/consul-replicate/0.2.0/consul-replicate_0.2.0_darwin_amd64.zip'
-  sha256 '48956988c2f3d963930f48f26fe16c3dee9eede8719de002940f18802195c190'
-  version '0.2.0'
+  url 'https://releases.hashicorp.com/consul-replicate/0.3.1/consul-replicate_0.3.1_darwin_amd64.zip'
+  sha256 'd6e41b1d4355b8a7ae1173a4ffed9f84751b7fbd0f565df8ead6b62725a361f0'
+  version '0.3.1'
   def install
     bin.install Dir['*']
   end
